@@ -68,7 +68,6 @@ export function Create({}, {createElement}: RenderContext) {
 
     const formValues = new RxMap<string, any>([])
     const onSubmit = () => {
-        console.log(formValues.get('name')())
         window.location.href = '/init.html'
     }
 
