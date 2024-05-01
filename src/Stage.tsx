@@ -2,7 +2,7 @@ import {Atom, atom, onLeftMouseDown, reactiveSize, RenderContext, RxList, RxMap,
 import {Shot, ShotNode} from "./Shot.js";
 import {ShotEdge, ShotEdgeNode} from "./ShotEdge.js";
 import {reactiveDragPosition} from "./reactiveDragPosition.js";
-import {reactiveMousePosition} from "./reactiveMousePosition.js";
+import {createReactiveMousePosition} from "./reactiveMousePosition.js";
 import {NewEdge} from "./NewEdge.js";
 import {colors, gaps} from "../lib/style.js";
 import {NewShot} from "./NewShot.js";
@@ -73,7 +73,7 @@ export function Stage({ scale }: StageProps, {createElement, createStateFromRef,
             newEdgePropY1()
     }
 
-    const connectingMousePosition = createStateFromRef(reactiveMousePosition, newEdgeStartShot)
+    const connectingMousePosition = createStateFromRef(createReactiveMousePosition(newEdgeStartShot))
     const startConnect = (shot: ShotNode) => {
         newEdgeStartShot(shot)
     }

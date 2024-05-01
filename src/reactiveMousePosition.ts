@@ -8,30 +8,33 @@ type PositionObject = {
     offsetY: number
 }
 
-export function reactiveMousePosition(ref: HTMLElement, position: Atom<PositionObject|null>, shouldRecord: Atom<any>) {
-    const mouseMoveListener = (e: MouseEvent) => {
-        position({
-            clientX: e.clientX,
-            clientY: e.clientY,
-            offsetX: e.offsetX,
-            offsetY: e.offsetY
-        })
-    }
+export function createReactiveMousePosition(shouldRecord: Atom<any>) {
+    return (ref: HTMLElement, position: Atom<PositionObject|null>) => {
+        const mouseMoveListener = (e: MouseEvent) => {
+            position({
+                clientX: e.clientX,
+                clientY: e.clientY,
+                offsetX: e.offsetX,
+                offsetY: e.offsetY
+            })
+        }
 
-    const stopAutorun = autorun(() => {
-        if(shouldRecord()) {
-            ref.addEventListener('mousemove', mouseMoveListener)
-        } else {
+        const stopAutorun = autorun(() => {
+            if(shouldRecord()) {
+                ref.addEventListener('mousemove', mouseMoveListener)
+            } else {
+                ref.removeEventListener('mousemove', mouseMoveListener)
+                position(null)
+            }
+        })
+
+        return () => {
             ref.removeEventListener('mousemove', mouseMoveListener)
+            stopAutorun()
             position(null)
         }
-    })
-
-    return () => {
-        ref.removeEventListener('mousemove', mouseMoveListener)
-        stopAutorun()
-        position(null)
     }
+
 
 }
 
